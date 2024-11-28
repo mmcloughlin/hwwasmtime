@@ -5737,6 +5737,17 @@ fn test_aarch64_binemit() {
     ));
 
     insns.push((
+        Inst::Sha1C {
+            rd: writable_vreg(5),
+            ri: vreg(5),
+            rn: vreg(6),
+            rm: vreg(1),
+        },
+        "C500015E",
+        "sha1c q5, q5, s6, v1.4s",
+    ));
+
+    insns.push((
         Inst::Extend {
             rd: writable_xreg(3),
             rn: xreg(5),
