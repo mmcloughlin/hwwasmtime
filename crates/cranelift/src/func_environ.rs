@@ -96,7 +96,6 @@ pub struct FuncEnvironment<'module_environment> {
         wasmtime_environ::GcLayout,
     >,
 
-    #[cfg(feature = "wmemcheck")]
     translation: &'module_environment ModuleTranslation<'module_environment>,
 
     /// Heaps implementing WebAssembly linear memories.
@@ -207,9 +206,8 @@ impl<'module_environment> FuncEnvironment<'module_environment> {
 
             #[cfg(feature = "wmemcheck")]
             wmemcheck,
-            #[cfg(feature = "wmemcheck")]
-            translation,
 
+            translation,
             stack_limit_at_function_entry: None,
         }
     }
@@ -952,6 +950,11 @@ impl<'module_environment> FuncEnvironment<'module_environment> {
                 panic!("function name not a UserFuncName::User as expected")
             }
         };
+        self.func_name(func_index)
+    }
+
+    /// Lookup the name of a function in the name section.
+    fn func_name(&self, func_index: FuncIndex) -> Option<&str> {
         self.translation
             .debuginfo
             .name_section
@@ -2612,6 +2615,20 @@ impl<'module_environment> crate::translate::FuncEnvironment
         callee: ir::FuncRef,
         call_args: &[ir::Value],
     ) -> WasmResult<ir::Inst> {
+        // Intercept intrinsic call.
+        let name = self.func_name(callee_index);
+        match name {
+            Some("vsha1cq_u32") => {
+                let v = builder
+                    .ins()
+                    .aarch64_sha1c(call_args[0], call_args[1], call_args[2]);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
+            _ => {}
+        }
+
+        // Regular call.
         Call::new(builder, self).direct_call(callee_index, callee, call_args)
     }
 
