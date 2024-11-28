@@ -2835,6 +2835,10 @@ impl MachInstEmit for Inst {
                 // out:
                 sink.bind_label(out_label, &mut state.ctrl_plane);
             }
+            &Inst::Sha1C { rd, ri, rn, rm } => {
+                debug_assert_eq!(rd.to_reg(), ri);
+                sink.put4(enc_vec_rrr(0b01011110000, rm, 0b000000, rn, rd));
+            }
             &Inst::MovToNZCV { rn } => {
                 sink.put4(0xd51b4200 | machreg_to_gpr(rn));
             }

@@ -794,6 +794,13 @@
         (rm Reg)
         (cond Cond))
 
+       ;; SHA1 hash update (choose).
+       (Sha1C
+        (rd WritableReg)
+        (ri Reg)
+        (rn Reg)
+        (rm Reg))
+
        ;; Move to the NZCV flags (actually a `MSR NZCV, Xn` insn).
        (MovToNZCV
         (rn Reg))
