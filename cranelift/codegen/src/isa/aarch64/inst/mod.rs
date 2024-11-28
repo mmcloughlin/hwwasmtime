@@ -812,6 +812,12 @@ fn aarch64_get_operands(inst: &mut Inst, collector: &mut impl OperandVisitor) {
             collector.reg_use(rn);
             collector.reg_use(rm);
         }
+        Inst::Sha1C { rd, ri, rn, rm } => {
+            collector.reg_reuse_def(rd, 1); // `rd` == `ri`.
+            collector.reg_use(ri);
+            collector.reg_use(rn);
+            collector.reg_use(rm);
+        }
         Inst::MovToNZCV { rn } => {
             collector.reg_use(rn);
         }
@@ -2492,6 +2498,13 @@ impl Inst {
                 let rm = pretty_print_vreg_vector(rm, VectorSize::Size8x16);
                 let cond = cond.pretty_print(0);
                 format!("vcsel {rd}, {rn}, {rm}, {cond} (if-then-else diamond)")
+            }
+            &Inst::Sha1C { rd, ri, rn, rm } => {
+                let rd = pretty_print_vreg_scalar(rd.to_reg(), ScalarSize::Size128);
+                let ri = pretty_print_vreg_scalar(ri, ScalarSize::Size128);
+                let rn = pretty_print_vreg_scalar(rn, ScalarSize::Size32);
+                let rm = pretty_print_vreg_vector(rm, VectorSize::Size32x4);
+                format!("sha1c {rd}, {ri}, {rn}, {rm}")
             }
             &Inst::MovToNZCV { rn } => {
                 let rn = pretty_print_reg(rn);
