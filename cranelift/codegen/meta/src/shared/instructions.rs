@@ -585,6 +585,42 @@ fn define_simd_arithmetic(
     );
 }
 
+#[inline(never)]
+fn define_aarch64_intrinsics(
+    ig: &mut InstructionGroupBuilder,
+    formats: &Formats,
+    _: &Immediates,
+    _: &EntityRefs,
+) {
+    let i32_: &TypeVar = &ValueType::from(LaneType::from(types::Int::I32)).into();
+
+    let I32x4 = &TypeVar::new(
+        "I32x4",
+        "A SIMD vector with exactly 4 lanes of 32-bit values",
+        TypeSetBuilder::new()
+            .ints(32..32)
+            .simd_lanes(4..4)
+            .includes_scalars(false)
+            .build(),
+    );
+
+    ig.push(
+        Inst::new(
+            "aarch64_sha1c",
+            r#"
+        An instruction with equivalent semantics to `sha1c` on AArch64.
+            "#,
+            &formats.ternary,
+        )
+        .operands_in(vec![
+            Operand::new("hash_abcd", I32x4),
+            Operand::new("hash_e", i32_),
+            Operand::new("wk", I32x4),
+        ])
+        .operands_out(vec![Operand::new("result", I32x4)]),
+    );
+}
+
 pub(crate) fn define(
     all_instructions: &mut AllInstructions,
     formats: &Formats,
@@ -596,6 +632,7 @@ pub(crate) fn define(
     define_control_flow(&mut ig, formats, imm, entities);
     define_simd_lane_access(&mut ig, formats, imm, entities);
     define_simd_arithmetic(&mut ig, formats, imm, entities);
+    define_aarch64_intrinsics(&mut ig, formats, imm, entities);
 
     // Operand kind shorthands.
     let i8: &TypeVar = &ValueType::from(LaneType::from(types::Int::I8)).into();
