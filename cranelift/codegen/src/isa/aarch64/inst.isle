@@ -2457,6 +2457,14 @@
             (_ Unit (emit (MInst.VecRRLong op dst src high_half))))
         dst))
 
+;; Helper for emitting `MInst.Sha1C` instructions which use three registers,
+;; one of which is both source and output.
+(decl sha1c (Reg Reg Reg) Reg)
+(rule (sha1c abcd e wk)
+      (let ((dst WritableReg (temp_writable_reg $I32X4))
+            (_1 Unit (emit (MInst.Sha1C dst abcd e wk))))
+        dst))
+
 ;; Helper for emitting `MInst.FpuCSel16` / `MInst.FpuCSel32` / `MInst.FpuCSel64`
 ;; instructions.
 (decl fpu_csel (Type Cond Reg Reg) ConsumesFlags)
