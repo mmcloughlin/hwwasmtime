@@ -2839,8 +2839,8 @@ impl MachInstEmit for Inst {
                 debug_assert_eq!(rd.to_reg(), ri);
                 let bit15_10 = match f {
                     Sha1UpdateFunc::Choose => 0b000000,
-                    Sha1UpdateFunc::Parity => todo!(),
-                    Sha1UpdateFunc::Majority => todo!(),
+                    Sha1UpdateFunc::Parity => 0b000100,
+                    Sha1UpdateFunc::Majority => 0b001000,
                 };
                 sink.put4(enc_vec_rrr(0b01011110000, rm, bit15_10, rn, rd));
             }

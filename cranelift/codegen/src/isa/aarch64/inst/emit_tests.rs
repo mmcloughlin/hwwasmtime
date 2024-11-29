@@ -5737,7 +5737,8 @@ fn test_aarch64_binemit() {
     ));
 
     insns.push((
-        Inst::Sha1C {
+        Inst::Sha1Update {
+            f: Sha1UpdateFunc::Choose,
             rd: writable_vreg(5),
             ri: vreg(5),
             rn: vreg(6),
@@ -5745,6 +5746,30 @@ fn test_aarch64_binemit() {
         },
         "C500015E",
         "sha1c q5, q5, s6, v1.4s",
+    ));
+
+    insns.push((
+        Inst::Sha1Update {
+            f: Sha1UpdateFunc::Parity,
+            rd: writable_vreg(7),
+            ri: vreg(7),
+            rn: vreg(15),
+            rm: vreg(3),
+        },
+        "E711035E",
+        "sha1p q7, q7, s15, v3.4s",
+    ));
+
+    insns.push((
+        Inst::Sha1Update {
+            f: Sha1UpdateFunc::Majority,
+            rd: writable_vreg(4),
+            ri: vreg(4),
+            rn: vreg(8),
+            rm: vreg(2),
+        },
+        "0421025E",
+        "sha1m q4, q4, s8, v2.4s",
     ));
 
     insns.push((

@@ -2503,8 +2503,8 @@ impl Inst {
             &Inst::Sha1Update { f, rd, ri, rn, rm } => {
                 let op = match f {
                     Sha1UpdateFunc::Choose => "sha1c",
-                    Sha1UpdateFunc::Parity => todo!(),
-                    Sha1UpdateFunc::Majority => todo!(),
+                    Sha1UpdateFunc::Parity => "sha1p",
+                    Sha1UpdateFunc::Majority => "sha1m",
                 };
                 let rd = pretty_print_vreg_scalar(rd.to_reg(), ScalarSize::Size128);
                 let ri = pretty_print_vreg_scalar(ri, ScalarSize::Size128);
