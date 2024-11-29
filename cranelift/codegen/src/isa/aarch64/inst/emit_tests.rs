@@ -5773,6 +5773,15 @@ fn test_aarch64_binemit() {
     ));
 
     insns.push((
+        Inst::Sha1H {
+            rd: writable_vreg(17),
+            rn: vreg(6),
+        },
+        "D108285E",
+        "sha1h s17, s6",
+    ));
+
+    insns.push((
         Inst::Extend {
             rd: writable_xreg(3),
             rn: xreg(5),

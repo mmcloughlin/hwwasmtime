@@ -819,6 +819,10 @@ fn aarch64_get_operands(inst: &mut Inst, collector: &mut impl OperandVisitor) {
             collector.reg_use(rn);
             collector.reg_use(rm);
         }
+        Inst::Sha1H { rd, rn } => {
+            collector.reg_def(rd);
+            collector.reg_use(rn);
+        }
         Inst::MovToNZCV { rn } => {
             collector.reg_use(rn);
         }
@@ -2511,6 +2515,11 @@ impl Inst {
                 let rn = pretty_print_vreg_scalar(rn, ScalarSize::Size32);
                 let rm = pretty_print_vreg_vector(rm, VectorSize::Size32x4);
                 format!("{op} {rd}, {ri}, {rn}, {rm}")
+            }
+            &Inst::Sha1H { rd, rn } => {
+                let rd = pretty_print_vreg_scalar(rd.to_reg(), ScalarSize::Size32);
+                let rn = pretty_print_vreg_scalar(rn, ScalarSize::Size32);
+                format!("sha1h {rd}, {rn}")
             }
             &Inst::MovToNZCV { rn } => {
                 let rn = pretty_print_reg(rn);

@@ -802,6 +802,11 @@
         (rn Reg)
         (rm Reg))
 
+       ;; SHA1 fixed rotate.
+       (Sha1H
+        (rd WritableReg)
+        (rn Reg))
+
        ;; Move to the NZCV flags (actually a `MSR NZCV, Xn` insn).
        (MovToNZCV
         (rn Reg))
@@ -2475,6 +2480,13 @@
 (rule (sha1_update f abcd e wk)
       (let ((dst WritableReg (temp_writable_reg $I32X4))
             (_1 Unit (emit (MInst.Sha1Update f dst abcd e wk))))
+        dst))
+
+;; Helper for emitting `MInst.Sha1H` instructions.
+(decl sha1h (Reg) Reg)
+(rule (sha1h e)
+      (let ((dst WritableReg (temp_writable_reg $F32))
+            (_ Unit (emit (MInst.Sha1H dst e))))
         dst))
 
 ;; Helper for emitting `MInst.FpuCSel16` / `MInst.FpuCSel32` / `MInst.FpuCSel64`
