@@ -2679,6 +2679,12 @@ impl<'module_environment> crate::translate::FuncEnvironment
                 let inst = builder.func.dfg.value_def(v).unwrap_inst();
                 return Ok(inst);
             }
+            Some("vdupq_n_u32") => {
+                debug_assert_eq!(builder.func.dfg.value_type(call_args[0]), ir::types::I32);
+                let v = builder.ins().splat(ir::types::I32X4, call_args[0]);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
             _ => {}
         }
 
