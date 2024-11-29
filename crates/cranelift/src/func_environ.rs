@@ -2641,6 +2641,20 @@ impl<'module_environment> crate::translate::FuncEnvironment
                 let inst = builder.func.dfg.value_def(v).unwrap_inst();
                 return Ok(inst);
             }
+            Some("vsha1pq_u32") => {
+                let v = builder
+                    .ins()
+                    .aarch64_sha1p(call_args[0], call_args[1], call_args[2]);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
+            Some("vsha1mq_u32") => {
+                let v = builder
+                    .ins()
+                    .aarch64_sha1m(call_args[0], call_args[1], call_args[2]);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
             _ => {}
         }
 
