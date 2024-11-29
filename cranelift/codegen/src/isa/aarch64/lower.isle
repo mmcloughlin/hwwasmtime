@@ -3070,6 +3070,10 @@
 (rule (lower (aarch64_sha1su0 w0_3 w4_7 w8_11))
       (sha1su0 w0_3 w4_7 w8_11))
 
+;;; Rules for `aarch64_sha1su1` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(rule (lower (aarch64_sha1su1 tw0_3 w12_15)) (sha1su1 tw0_3 w12_15))
+
 ;;; Rules for `aarch64_sha1h` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rule (lower (aarch64_sha1h e))

@@ -2510,6 +2510,14 @@
             (_ Unit (emit (MInst.Sha1Sched0 dst w0_3 w4_7 w8_11))))
         dst))
 
+;; Helper for emitting `MInst.Sha1Sched1` instructions which use two
+;; registers, one of which is both source and output.
+(decl sha1su1 (Reg Reg) Reg)
+(rule (sha1su1 tw0_3 w12_15)
+      (let ((dst WritableReg (temp_writable_reg $I32X4))
+            (_ Unit (emit (MInst.Sha1Sched1 dst tw0_3 w12_15))))
+        dst))
+
 ;; Helper for emitting `MInst.FpuCSel16` / `MInst.FpuCSel32` / `MInst.FpuCSel64`
 ;; instructions.
 (decl fpu_csel (Type Cond Reg Reg) ConsumesFlags)
