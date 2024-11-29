@@ -814,6 +814,12 @@
         (rn Reg)
         (rm Reg))
 
+       ;; SHA1 Schedule Update 1.
+       (Sha1Sched1
+        (rd WritableReg)
+        (ri Reg)
+        (rn Reg))
+
        ;; Move to the NZCV flags (actually a `MSR NZCV, Xn` insn).
        (MovToNZCV
         (rn Reg))

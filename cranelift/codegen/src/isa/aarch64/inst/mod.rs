@@ -823,6 +823,11 @@ fn aarch64_get_operands(inst: &mut Inst, collector: &mut impl OperandVisitor) {
             collector.reg_def(rd);
             collector.reg_use(rn);
         }
+        Inst::Sha1Sched1 { rd, ri, rn } => {
+            collector.reg_reuse_def(rd, 1); // `rd` == `ri`.
+            collector.reg_use(ri);
+            collector.reg_use(rn);
+        }
         Inst::MovToNZCV { rn } => {
             collector.reg_use(rn);
         }
@@ -2527,6 +2532,12 @@ impl Inst {
                 let rn = pretty_print_vreg_vector(rn, VectorSize::Size32x4);
                 let rm = pretty_print_vreg_vector(rm, VectorSize::Size32x4);
                 format!("sha1su0 {rd}, {ri}, {rn}, {rm}")
+            }
+            &Inst::Sha1Sched1 { rd, ri, rn } => {
+                let rd = pretty_print_vreg_vector(rd.to_reg(), VectorSize::Size32x4);
+                let ri = pretty_print_vreg_vector(ri, VectorSize::Size32x4);
+                let rn = pretty_print_vreg_vector(rn, VectorSize::Size32x4);
+                format!("sha1su1 {rd}, {ri}, {rn}")
             }
             &Inst::MovToNZCV { rn } => {
                 let rn = pretty_print_reg(rn);
