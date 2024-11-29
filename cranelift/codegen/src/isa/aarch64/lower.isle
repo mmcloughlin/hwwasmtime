@@ -3053,7 +3053,7 @@
 ;;; Rules for `aarch64_sha1c` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rule (lower (aarch64_sha1c abcd e wk))
-      (sha1c abcd e wk))
+      (sha1c abcd (mov_to_fpu e (ScalarSize.Size32)) wk))
 
 ;;; Rules for `brif` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
