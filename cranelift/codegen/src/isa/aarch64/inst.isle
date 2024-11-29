@@ -814,6 +814,12 @@
         (rn Reg)
         (rm Reg))
 
+       ;; SHA1 Schedule Update 1.
+       (Sha1Sched1
+        (rd WritableReg)
+        (ri Reg)
+        (rn Reg))
+
        ;; Move to the NZCV flags (actually a `MSR NZCV, Xn` insn).
        (MovToNZCV
         (rn Reg))
@@ -2502,6 +2508,14 @@
 (rule (sha1su0 w0_3 w4_7 w8_11)
       (let ((dst WritableReg (temp_writable_reg $I32X4))
             (_ Unit (emit (MInst.Sha1Sched0 dst w0_3 w4_7 w8_11))))
+        dst))
+
+;; Helper for emitting `MInst.Sha1Sched1` instructions which use two
+;; registers, one of which is both source and output.
+(decl sha1su1 (Reg Reg) Reg)
+(rule (sha1su1 tw0_3 w12_15)
+      (let ((dst WritableReg (temp_writable_reg $I32X4))
+            (_ Unit (emit (MInst.Sha1Sched1 dst tw0_3 w12_15))))
         dst))
 
 ;; Helper for emitting `MInst.FpuCSel16` / `MInst.FpuCSel32` / `MInst.FpuCSel64`
