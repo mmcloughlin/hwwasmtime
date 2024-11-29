@@ -1291,6 +1291,7 @@ where
         Opcode::Aarch64Sha1m => unimplemented!("Aarch64Sha1m"),
         Opcode::Aarch64Sha1h => unimplemented!("Aarch64Sha1h"),
         Opcode::Aarch64Sha1su0 => unimplemented!("Aarch64Sha1su0"),
+        Opcode::Aarch64Sha1su1 => unimplemented!("Aarch64Sha1su1"),
     })
 }
 
