@@ -2849,6 +2849,10 @@ impl MachInstEmit for Inst {
                     | machreg_to_vec(rn) << 5
                     | machreg_to_vec(rd.to_reg()),
             ),
+            &Inst::Sha1Sched0 { rd, ri, rn, rm } => {
+                debug_assert_eq!(rd.to_reg(), ri);
+                sink.put4(enc_vec_rrr(0b01011110000, rm, 0b001100, rn, rd));
+            }
             &Inst::MovToNZCV { rn } => {
                 sink.put4(0xd51b4200 | machreg_to_gpr(rn));
             }

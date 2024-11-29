@@ -5782,6 +5782,17 @@ fn test_aarch64_binemit() {
     ));
 
     insns.push((
+        Inst::Sha1Sched0 {
+            rd: writable_vreg(3),
+            ri: vreg(3),
+            rn: vreg(0),
+            rm: vreg(1),
+        },
+        "0330015E",
+        "sha1su0 v3.4s, v3.4s, v0.4s, v1.4s",
+    ));
+
+    insns.push((
         Inst::Extend {
             rd: writable_xreg(3),
             rn: xreg(5),
