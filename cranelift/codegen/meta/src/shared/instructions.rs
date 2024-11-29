@@ -604,21 +604,25 @@ fn define_aarch64_intrinsics(
             .build(),
     );
 
-    ig.push(
-        Inst::new(
-            "aarch64_sha1c",
-            r#"
-        An instruction with equivalent semantics to `sha1c` on AArch64.
-            "#,
-            &formats.ternary,
-        )
-        .operands_in(vec![
-            Operand::new("hash_abcd", I32x4),
-            Operand::new("hash_e", i32_),
-            Operand::new("wk", I32x4),
-        ])
-        .operands_out(vec![Operand::new("result", I32x4)]),
-    );
+    for op in ["sha1c", "sha1p", "sha1m"] {
+        ig.push(
+            Inst::new(
+                format!("aarch64_{op}"),
+                format!(
+                    r#"
+        An instruction with equivalent semantics to `{op}` on AArch64.
+            "#
+                ),
+                &formats.ternary,
+            )
+            .operands_in(vec![
+                Operand::new("hash_abcd", I32x4),
+                Operand::new("hash_e", i32_),
+                Operand::new("wk", I32x4),
+            ])
+            .operands_out(vec![Operand::new("result", I32x4)]),
+        );
+    }
 }
 
 pub(crate) fn define(
