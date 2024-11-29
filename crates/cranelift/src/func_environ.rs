@@ -7,8 +7,8 @@ use cranelift_codegen::cursor::FuncCursor;
 use cranelift_codegen::ir::condcodes::IntCC;
 use cranelift_codegen::ir::immediates::{Imm64, Offset32};
 use cranelift_codegen::ir::pcc::Fact;
-use cranelift_codegen::ir::types::*;
-use cranelift_codegen::ir::{self, types};
+use cranelift_codegen::ir::{self, types, Opcode};
+use cranelift_codegen::ir::{types::*, InstructionData};
 use cranelift_codegen::ir::{ArgumentPurpose, Function, InstBuilder, MemFlags};
 use cranelift_codegen::isa::{TargetFrontendConfig, TargetIsa};
 use cranelift_entity::packed_option::ReservedValue;
@@ -2686,6 +2686,27 @@ impl<'module_environment> crate::translate::FuncEnvironment
             Some("vdupq_n_u32") => {
                 debug_assert_eq!(builder.func.dfg.value_type(call_args[0]), ir::types::I32);
                 let v = builder.ins().splat(ir::types::I32X4, call_args[0]);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
+            Some("vgetq_lane_u32") => {
+                // Lane index is an immediate. Expect it to be a constant
+                // argument, and extract its value.
+                let dfg = &builder.func.dfg;
+                let lane_inst = dfg.value_def(call_args[1]).unwrap_inst();
+                let lane_inst_data = &dfg.insts[lane_inst];
+                let lane: u8 = match lane_inst_data {
+                    InstructionData::UnaryImm {
+                        opcode: Opcode::Iconst,
+                        imm,
+                    } => imm.bits().try_into().unwrap(),
+                    _ => panic!("lane index should be constant"),
+                };
+                // Emit extractlane instruction.
+                let x = builder
+                    .ins()
+                    .bitcast(ir::types::I32X4, MemFlags::new(), call_args[0]);
+                let v = builder.ins().extractlane(x, lane);
                 let inst = builder.func.dfg.value_def(v).unwrap_inst();
                 return Ok(inst);
             }
