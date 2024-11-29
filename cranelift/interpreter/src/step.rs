@@ -1287,6 +1287,10 @@ where
         Opcode::X86Cvtt2dq => unimplemented!("X86Cvtt2dq"),
         Opcode::StackSwitch => unimplemented!("StackSwitch"),
         Opcode::Aarch64Sha1c => unimplemented!("Aarch64Sha1c"),
+        Opcode::Aarch64Sha1p => unimplemented!("Aarch64Sha1p"),
+        Opcode::Aarch64Sha1m => unimplemented!("Aarch64Sha1m"),
+        Opcode::Aarch64Sha1h => unimplemented!("Aarch64Sha1h"),
+        Opcode::Aarch64Sha1su0 => unimplemented!("Aarch64Sha1su0"),
     })
 }
 
