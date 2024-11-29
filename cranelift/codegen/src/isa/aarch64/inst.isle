@@ -794,8 +794,9 @@
         (rm Reg)
         (cond Cond))
 
-       ;; SHA1 hash update (choose).
-       (Sha1C
+       ;; SHA1 hash update.
+       (Sha1Update
+        (f Sha1UpdateFunc)
         (rd WritableReg)
         (ri Reg)
         (rn Reg)
@@ -1744,6 +1745,17 @@
     (Sli)
 ))
 
+;; Bitwise function in SHA-1 hash update.
+(type Sha1UpdateFunc
+  (enum
+    ;; Bitwise choice.
+    (Choose)
+    ;; Parity, or exclusive or.
+    (Parity)
+    ;; Bitwise majority.
+    (Majority)
+))
+
 ;; Atomic read-modify-write operations with acquire-release semantics
 (type AtomicRMWOp
   (enum
@@ -2457,12 +2469,12 @@
             (_ Unit (emit (MInst.VecRRLong op dst src high_half))))
         dst))
 
-;; Helper for emitting `MInst.Sha1C` instructions which use three registers,
-;; one of which is both source and output.
-(decl sha1c (Reg Reg Reg) Reg)
-(rule (sha1c abcd e wk)
+;; Helper for emitting `MInst.Sha1Update` instructions which use three
+;; registers, one of which is both source and output.
+(decl sha1_update (Sha1UpdateFunc Reg Reg Reg) Reg)
+(rule (sha1_update f abcd e wk)
       (let ((dst WritableReg (temp_writable_reg $I32X4))
-            (_1 Unit (emit (MInst.Sha1C dst abcd e wk))))
+            (_1 Unit (emit (MInst.Sha1Update f dst abcd e wk))))
         dst))
 
 ;; Helper for emitting `MInst.FpuCSel16` / `MInst.FpuCSel32` / `MInst.FpuCSel64`
