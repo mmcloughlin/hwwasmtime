@@ -635,6 +635,22 @@ fn define_aarch64_intrinsics(
         .operands_in(vec![Operand::new("hash_e", i32_)])
         .operands_out(vec![Operand::new("result", i32_)]),
     );
+
+    ig.push(
+        Inst::new(
+            "aarch64_sha1su0",
+            r#"
+        An instruction with equivalent semantics to `sha1su0` on AArch64.
+            "#,
+            &formats.ternary,
+        )
+        .operands_in(vec![
+            Operand::new("w0_3", I32x4),
+            Operand::new("w4_7", I32x4),
+            Operand::new("w8_11", I32x4),
+        ])
+        .operands_out(vec![Operand::new("result", I32x4)]),
+    );
 }
 
 pub(crate) fn define(
