@@ -2673,9 +2673,13 @@ impl<'module_environment> crate::translate::FuncEnvironment
                 return Ok(inst);
             }
             Some("vaddq_u32") => {
-                debug_assert_eq!(builder.func.dfg.value_type(call_args[0]), ir::types::I32X4);
-                debug_assert_eq!(builder.func.dfg.value_type(call_args[1]), ir::types::I32X4);
-                let v = builder.ins().iadd(call_args[0], call_args[1]);
+                let x = builder
+                    .ins()
+                    .bitcast(ir::types::I32X4, MemFlags::new(), call_args[0]);
+                let y = builder
+                    .ins()
+                    .bitcast(ir::types::I32X4, MemFlags::new(), call_args[1]);
+                let v = builder.ins().iadd(x, y);
                 let inst = builder.func.dfg.value_def(v).unwrap_inst();
                 return Ok(inst);
             }
