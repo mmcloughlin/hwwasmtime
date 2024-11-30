@@ -2710,6 +2710,20 @@ impl<'module_environment> crate::translate::FuncEnvironment
                 let inst = builder.func.dfg.value_def(v).unwrap_inst();
                 return Ok(inst);
             }
+            Some("vreinterpretq_u32_u8") => {
+                let v = builder
+                    .ins()
+                    .bitcast(ir::types::I32X4, MemFlags::new(), call_args[0]);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
+            Some("vreinterpretq_u8_u32") => {
+                let v = builder
+                    .ins()
+                    .bitcast(ir::types::I8X16, MemFlags::new(), call_args[0]);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
             _ => {}
         }
 
