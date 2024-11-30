@@ -5,9 +5,9 @@ use crate::translate::{
 use crate::{gc, BuiltinFunctionSignatures, TRAP_INTERNAL_ASSERT};
 use cranelift_codegen::cursor::FuncCursor;
 use cranelift_codegen::ir::condcodes::IntCC;
-use cranelift_codegen::ir::immediates::{Imm64, Offset32};
+use cranelift_codegen::ir::immediates::{Imm64, Offset32, V128Imm};
 use cranelift_codegen::ir::pcc::Fact;
-use cranelift_codegen::ir::{self, types, Opcode};
+use cranelift_codegen::ir::{self, types, ConstantData, Opcode};
 use cranelift_codegen::ir::{types::*, InstructionData};
 use cranelift_codegen::ir::{ArgumentPurpose, Function, InstBuilder, MemFlags};
 use cranelift_codegen::isa::{TargetFrontendConfig, TargetIsa};
@@ -2707,6 +2707,19 @@ impl<'module_environment> crate::translate::FuncEnvironment
                     .ins()
                     .bitcast(ir::types::I32X4, MemFlags::new(), call_args[0]);
                 let v = builder.ins().extractlane(x, lane);
+                let inst = builder.func.dfg.value_def(v).unwrap_inst();
+                return Ok(inst);
+            }
+            Some("vrev32q_u8") => {
+                // Zero for the second shuffle operand.
+                let zero128 = V128Imm::from(0u128);
+                let handle = builder.func.dfg.constants.insert(zero128.into());
+                let zero = builder.ins().vconst(I8X16, handle);
+                // Lanes mask.
+                let lanes = [3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12];
+                let lanes = ConstantData::from(lanes.as_ref());
+                let mask = builder.func.dfg.immediates.push(lanes);
+                let v = builder.ins().shuffle(call_args[0], zero, mask);
                 let inst = builder.func.dfg.value_def(v).unwrap_inst();
                 return Ok(inst);
             }
