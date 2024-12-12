@@ -592,8 +592,6 @@ fn define_aarch64_intrinsics(
     _: &Immediates,
     _: &EntityRefs,
 ) {
-    let i32_: &TypeVar = &ValueType::from(LaneType::from(types::Int::I32)).into();
-
     let I32x4 = &TypeVar::new(
         "I32x4",
         "A SIMD vector with exactly 4 lanes of 32-bit values",
@@ -617,7 +615,7 @@ fn define_aarch64_intrinsics(
             )
             .operands_in(vec![
                 Operand::new("hash_abcd", I32x4),
-                Operand::new("hash_e", i32_),
+                Operand::new("hash_e", I32x4),
                 Operand::new("wk", I32x4),
             ])
             .operands_out(vec![Operand::new("result", I32x4)]),
@@ -632,8 +630,8 @@ fn define_aarch64_intrinsics(
             "#,
             &formats.unary,
         )
-        .operands_in(vec![Operand::new("hash_e", i32_)])
-        .operands_out(vec![Operand::new("result", i32_)]),
+        .operands_in(vec![Operand::new("hash_e", I32x4)])
+        .operands_out(vec![Operand::new("result", I32x4)]),
     );
 
     ig.push(

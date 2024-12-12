@@ -3053,17 +3053,17 @@
 ;;; Rules for `aarch64_sha1c` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rule (lower (aarch64_sha1c abcd e wk))
-      (sha1_update (Sha1UpdateFunc.Choose) abcd (mov_to_fpu e (ScalarSize.Size32)) wk))
+      (sha1_update (Sha1UpdateFunc.Choose) abcd e wk))
 
 ;;; Rules for `aarch64_sha1p` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rule (lower (aarch64_sha1p abcd e wk))
-      (sha1_update (Sha1UpdateFunc.Parity) abcd (mov_to_fpu e (ScalarSize.Size32)) wk))
+      (sha1_update (Sha1UpdateFunc.Parity) abcd e wk))
 
 ;;; Rules for `aarch64_sha1m` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rule (lower (aarch64_sha1m abcd e wk))
-      (sha1_update (Sha1UpdateFunc.Majority) abcd (mov_to_fpu e (ScalarSize.Size32)) wk))
+      (sha1_update (Sha1UpdateFunc.Majority) abcd e wk))
 
 ;;; Rules for `aarch64_sha1su0` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -3076,8 +3076,7 @@
 
 ;;; Rules for `aarch64_sha1h` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(rule (lower (aarch64_sha1h e))
-      (mov_from_vec (sha1h (mov_to_fpu e (ScalarSize.Size32))) 0 (ScalarSize.Size32)))
+(rule (lower (aarch64_sha1h e)) (sha1h e))
 
 ;;; Rules for `brif` ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
