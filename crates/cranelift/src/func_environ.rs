@@ -2633,7 +2633,8 @@ impl<'module_environment> crate::translate::FuncEnvironment
     ) -> WasmResult<ir::Inst> {
         // Intercept intrinsic call.
         let name = self.func_name(callee_index);
-        match name {
+        let intrinsic_name = name.and_then(|name| name.strip_prefix("__intrinsic_"));
+        match intrinsic_name {
             Some("vsha1cq_u32") => {
                 let v = builder
                     .ins()
